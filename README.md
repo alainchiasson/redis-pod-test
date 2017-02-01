@@ -11,6 +11,51 @@ there is value in a co-located redis pod, as opposed to a redis service.
 
 run `make` for help on running the demo
 
+```
+make
+# load                 Load the testscript in the config map
+# reload               to update the scrip in the config map.
+# deploy               Deploy the redis test to kubernetes
+# delete               Delete the deploymnet
+# clean                removes everything from kubernetes
+# show                 Shows the deployment and pod status
+```
+
+# What is going on
+
+The crashing-app is a container that update information in redis database in a
+second container within the same pod. The script is :
+
+- get mycounter
+- increment mycounter
+- sleep 60 seconds
+- exit
+
+At this point, kubernetes will restart the failed (stopped) container, which  
+will start up the script again.
+
+# Verifying the persistance.
+
+Using the output of `make show` you can find the pod name (see the last line). You
+can view the data - either by looking at the logs of the `crashing-app` container
+while it is up ( 60 seconds ) :
+
+```
+kubectl logs -f <pod-id> -c crashing-app
+```
+
+Or you can connect to the redis container and query the database :
+
+```
+kubectl exec -ti <pod-id> -c redis redis-cli
+get mycounter
+```
+
+Or even explore the file system :
+
+```
+kubectl exec -ti <pod-id> -c redis /bin/bash
+```
 
 
 ## First test
@@ -33,5 +78,5 @@ database will persist.
 
 # Implementation details
 
-I will be trying to use a config map for the startup scripts so I do not need to
-build a new pod.
+The startup script for the `crashing-app` iscontainer in a config map file. This 
+allows me to inject a stratup script into the standard redis container.

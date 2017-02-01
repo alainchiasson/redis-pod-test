@@ -21,4 +21,4 @@ clean:  ## removes everything from kubernetes
 	kubectl delete configmap runscript
 
 show: ## Shows the deployment and pod status
-	kubectl describe deployment redis-test && kubectl get pods -l app=redis-test
+	kubectl describe pods -l app=redis-test && kubectl get pods -l app=redis-test
