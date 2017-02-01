@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+data:
+  script: |
+      #!/bin/bash
+      redis-cli get mycounter
+      redis-cli incr mycounter
+      sleep 60
+kind: ConfigMap
+metadata:
+  name: runscript

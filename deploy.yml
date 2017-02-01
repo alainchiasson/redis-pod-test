@@ -1,0 +1,32 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis-test
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis-test
+    spec:
+      volumes:
+      - name: run-script
+        configMap:
+          name: runscript
+          items:
+          - key: script
+            path: run_script.sh
+      containers:
+      - name: redis
+        image: redis
+        ports:
+          - containerPort: 6379
+      - name: crashing-app
+        image: redis
+        command:
+           - '/bin/bash'
+           - '/root/run_script.sh'
+        volumeMounts:
+        - mountPath: /root
+          name: run-script
