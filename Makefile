@@ -14,10 +14,10 @@ deploy:  ## Deploy the redis test to kubernetes
 	kubectl create -f deploy.yml
 
 delete: ## Delete the deploymnet
-	kubectl delete deploymnet redis-test
+	kubectl delete deployment redis-test
 
 clean:  ## removes everything from kubernetes
-	kubectl delete deploymnet redis-test
+	kubectl delete deployment redis-test
 	kubectl delete configmap runscript
 
 show: ## Shows the deployment and pod status
